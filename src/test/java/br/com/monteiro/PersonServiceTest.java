@@ -6,15 +6,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonServiceTest {
 
+    IPersonService service;
     Person person;
 
     @BeforeEach
     void setup() {
+
+        service = new PersonService();
         person = new Person(
                 "Keith",
                 "Moon",
@@ -22,6 +24,7 @@ public class PersonServiceTest {
                 "Male",
                 "kmoon@monteiro.com.br"
         );
+
     }
 
     @DisplayName("When Create a Person with Success Should Return a Person Object")
@@ -29,7 +32,6 @@ public class PersonServiceTest {
     void testCreatePerson_WhenSuccess_ShouldReturnPersonObject() {
 
         //Given
-        IPersonService service = new PersonService();
 
         //When
         Person actual = service.createPerson(person);
@@ -40,18 +42,46 @@ public class PersonServiceTest {
     }
 
 
-    @DisplayName("When Create a Person with Success Should Contains FirstName in Returned Person Object")
+    @DisplayName("When Create a Person with Success Should Contains Valid Fields in Returned Person Object")
     @Test
-    void testCreatePerson_WhenSuccess_ShouldContainsFirstNameInReturnPersonObject() {
+    void testCreatePerson_WhenSuccess_ShouldContainsValidFieldsInReturnPersonObject() {
 
         //Given
-        IPersonService service = new PersonService();
-        
+
         //When
         Person actual = service.createPerson(person);
 
         //Then
-        assertEquals(person.getFirstName(), actual.getFirstName(), () -> "The FirstName is different!");
+        assertNotNull(person.getId(), () -> "Person ID is Missing!");
+        assertEquals(person.getFirstName(), actual.getFirstName(), () -> "The FirstName is Incorrect!");
+        assertEquals(person.getLastName(), actual.getLastName(), () -> "The LastName is Incorrect!");
+        assertEquals(person.getEmail(), actual.getEmail(), () -> "The Email is Incorrect!");
+        assertEquals(person.getAddress(), actual.getAddress(), () -> "The Address is Incorrect!");
+        assertEquals(person.getGender(), actual.getGender(), () -> "The Gender is Incorrect!");
 
     }
+
+    @DisplayName("When Create a Person with null e-mail Should throw Exception")
+    @Test
+    void testCreatePerson_WithNullEmail_ShouldThrowIllegalArgumentException() {
+
+        //Given
+
+        //When
+        Person actual = service.createPerson(person);
+        person.setEmail(null);
+
+        var expectedMessage = "The Person e-Mail is null or empty!";
+
+        //Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> service.createPerson(person),
+                () -> "Empty e-Mail should have cause an IllegalArgumentException!");
+
+        assertEquals(
+                expectedMessage,
+                exception.getMessage(),
+                ()-> "Exception error message is incorrect!");
+    }
+
 }
