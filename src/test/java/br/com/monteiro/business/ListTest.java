@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -71,6 +70,25 @@ public class ListTest {
         //When
         assertEquals("Monteiro", list.get(anyInt()));
         assertEquals("Monteiro",list.get(anyInt()));
+
+    }
+
+
+    @Test
+    void testMockingList_When_ThrowsAnException() {
+
+        //Given
+        var list = mock(List.class);
+
+
+        //If you are using argument matchers, all arguments
+        //have to be provided by matchers.
+        when(list.get(anyInt())).thenThrow(new RuntimeException("Foo Bar!!"));
+
+        //When
+        assertThrows(RuntimeException.class,() -> {
+            list.get(anyInt());},
+                () -> "Should have thrown an RuntimesException");
 
     }
 }
