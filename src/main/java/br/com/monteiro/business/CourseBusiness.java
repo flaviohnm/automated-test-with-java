@@ -17,7 +17,7 @@ public class CourseBusiness {
     public List<String> retriveCoursesRelatedToString(String student) {
 
         var filteredCourses = new ArrayList<String>();
-        if("Foo Bar".equals(student)) return filteredCourses;
+        if ("Foo Bar".equals(student)) return filteredCourses;
         var allCourses = service.retrieveCourses(student);
 
         for (String course : allCourses) {
@@ -27,4 +27,17 @@ public class CourseBusiness {
         }
         return filteredCourses;
     }
+
+    public void deleteCoursesNotRelatedToSpring(String student) {
+
+        var allCourses = service.retrieveCourses(student);
+
+        for (String course : allCourses) {
+            if (!course.contains("Spring")) {
+                service.deleteCourse(course);
+            }
+        }
+
+    }
+
 }

@@ -23,4 +23,16 @@ public class CourseServiceStub implements CourseService {
                 "Microsserviços do 0 com Spring Cloud, Kotlin e Docker"
         );
     }
+
+    @Override
+    public List<String> doSomething(String student) {
+        return null;
+    }
+
+    @Override
+    public void deleteCourse(String course) {
+
+    }
+
+
 }

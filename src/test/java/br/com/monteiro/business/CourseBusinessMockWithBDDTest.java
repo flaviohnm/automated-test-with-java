@@ -2,6 +2,7 @@ package br.com.monteiro.business;
 
 import br.com.monteiro.service.CourseService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 
 public class CourseBusinessMockWithBDDTest {
@@ -59,6 +60,34 @@ public class CourseBusinessMockWithBDDTest {
 
         //Then
         assertThat(filteredCourses.size(), is(0));
+
+    }
+
+    @DisplayName("Delete Courses not Related to Spring Using Mockito sould call Method")
+    @Test
+    void testDeleteCourseNotRelatedToSpring_UsingMockitoVerify_Should_CallMethod_deleteCourse(){
+
+        //Given
+        given(mockService.retrieveCourses("Leandro"))
+                .willReturn(courses);
+
+        //When
+        business.deleteCoursesNotRelatedToSpring("Leandro");
+
+        //Then
+        verify(mockService, atLeastOnce())
+                .deleteCourse("Agile Desmistificado com Scrum, XP, Kanban e Trello");
+        verify(mockService, atLeast(1))
+                .deleteCourse("Agile Desmistificado com Scrum, XP, Kanban e Trello");
+        verify(mockService)
+                .deleteCourse("Agile Desmistificado com Scrum, XP, Kanban e Trello");
+        verify(mockService, times(1))
+                .deleteCourse("Agile Desmistificado com Scrum, XP, Kanban e Trello");
+        verify(mockService)
+                .deleteCourse("Arquitetura de Microsserviços do 0 com ASP.NET, .NET 6 e C#");
+        verify(mockService, never())
+                .deleteCourse("REST API's RESTFul do 0 à AWS com Spring Boot 3 Java e Docker");
+
 
     }
 
