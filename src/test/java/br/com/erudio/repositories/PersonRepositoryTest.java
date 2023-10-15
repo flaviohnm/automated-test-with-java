@@ -1,6 +1,7 @@
 package br.com.erudio.repositories;
 
 import br.com.erudio.model.Person;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,21 @@ public class PersonRepositoryTest {
     @Autowired
     private PersonRepository repository;
 
+    private Person person0;
+
+    @BeforeEach
+    public void setup(){
+        person0 = new Person(
+                "Flavio",
+                "Monteiro",
+                "monteiro@gmail.com",
+                "Recife",
+                "Male");
+    }
+
     @Test
     @DisplayName("Given Person Object when Save then Return Saved Person")
     void testGivenPersonObject_whenSave_thenReturnSavedPerson() {
-
-        //Given
-        Person person0 = new Person("Flavio", "Monteiro", "monteiro@gmail.com", "Recife", "Male");
 
         //When
         Person savedPerson = repository.save(person0);
@@ -38,7 +48,6 @@ public class PersonRepositoryTest {
     void testGivenPersonList_whenFindAll_thenReturnPersonList() {
 
         //Given
-        Person person0 = new Person("Flavio", "Monteiro", "monteiro@gmail.com", "Recife", "Male");
         Person person1 = new Person("Claudio", "Costa", "costa@gmail.com", "Caruaru", "Male");
         repository.save(person0);
         repository.save(person1);
@@ -57,7 +66,6 @@ public class PersonRepositoryTest {
     void testGivenPersonObject_whenFindByID_thenReturnPersonObject() {
 
         //Given
-        Person person0 = new Person("Flavio", "Monteiro", "monteiro@gmail.com", "Recife", "Male");
         repository.save(person0);
 
         //When
@@ -74,7 +82,6 @@ public class PersonRepositoryTest {
     void testGivenPersonObject_whenFindByEmail_thenReturnPersonObject() {
 
         //Given
-        Person person0 = new Person("Flavio", "Monteiro", "monteiro@gmail.com", "Recife", "Male");
         repository.save(person0);
 
         //When
@@ -91,7 +98,6 @@ public class PersonRepositoryTest {
     void testGivenPersonObject_whenUpdatePerson_thenReturnUpdatedPersonObject() {
 
         //Given
-        Person person0 = new Person("Flavio", "Monteiro", "monteiro@gmail.com", "Recife", "Male");
         repository.save(person0);
 
         //When
@@ -114,7 +120,6 @@ public class PersonRepositoryTest {
     void testGivenPersonObject_whenDelete_thenRemovePerson() {
 
         //Given
-        Person person0 = new Person("Flavio", "Monteiro", "monteiro@gmail.com", "Recife", "Male");
         repository.save(person0);
 
         //When
@@ -124,6 +129,82 @@ public class PersonRepositoryTest {
 
         //Then
         assertTrue(personOptional.isEmpty());
+
+    }
+
+    @Test
+    @DisplayName("JUnit test for Given FirstName And LastName when FindJPQL then Return Person Object")
+    void testGivenFirstNameAndLastName_whenFindJPQL_thenReturnPersonObject() {
+
+        //Given
+        repository.save(person0);
+
+        String firstName = "Flavio";
+        String lastName = "Monteiro";
+        //When
+        Person savedPerson = repository.findByJPQL(firstName, lastName);
+
+        //Then
+        assertNotNull(savedPerson);
+        assertEquals(firstName, savedPerson.getFirstName());
+        assertEquals(lastName, savedPerson.getLastName());
+
+    }
+
+    @Test
+    @DisplayName("JUnit test for Given FirstName And LastName when FindJPQL Named Parameters then Return Person Object")
+    void testGivenFirstNameAndLastName_whenFindJPQLNamedParameters_thenReturnPersonObject() {
+
+        //Given
+        repository.save(person0);
+
+        String firstName = "Flavio";
+        String lastName = "Monteiro";
+        //When
+        Person savedPerson = repository.findByJPQLNamedParameters(firstName, lastName);
+
+        //Then
+        assertNotNull(savedPerson);
+        assertEquals(firstName, savedPerson.getFirstName());
+        assertEquals(lastName, savedPerson.getLastName());
+
+    }
+
+    @Test
+    @DisplayName("JUnit test for Given FirstName And LastName when Find Native SQL then Return Person Object")
+    void testGivenFirstNameAndLastName_whenFindNativeSQL_thenReturnPersonObject() {
+
+        //Given
+        repository.save(person0);
+
+        String firstName = "Flavio";
+        String lastName = "Monteiro";
+        //When
+        Person savedPerson = repository.findByNativeSQL(firstName, lastName);
+
+        //Then
+        assertNotNull(savedPerson);
+        assertEquals(firstName, savedPerson.getFirstName());
+        assertEquals(lastName, savedPerson.getLastName());
+
+    }
+
+    @Test
+    @DisplayName("JUnit test for Given FirstName And LastName when Find Native SQL With Named Parameters then Return Person Object")
+    void testGivenFirstNameAndLastName_whenFindNativeSQLWithNamedParameters_thenReturnPersonObject() {
+
+        //Given
+        repository.save(person0);
+
+        String firstName = "Flavio";
+        String lastName = "Monteiro";
+        //When
+        Person savedPerson = repository.findByNativeSQLWithNamedParameters(firstName, lastName);
+
+        //Then
+        assertNotNull(savedPerson);
+        assertEquals(firstName, savedPerson.getFirstName());
+        assertEquals(lastName, savedPerson.getLastName());
 
     }
 
